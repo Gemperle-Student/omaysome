@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: awesometodoapp
+    env: node
+    buildCommand: ./build.sh
+    startCommand: cd server && node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false  # Let the user set this as a secret in the Render dashboard
+      - key: PORT
+        value: 10000 

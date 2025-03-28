@@ -7,9 +7,40 @@ const fs = require('fs');
 const app = express();
 app.use(express.json());
 
-// Log the build path
-const buildPath = path.join(__dirname, '../client/build');
-console.log('Using build path:', buildPath);
+// Determine if we're in production (Render) or local development
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Set the correct build path based on environment
+let buildPath;
+if (isProduction) {
+  // In production on Render
+  buildPath = path.join(process.cwd(), '../client/build');
+  
+  // Alternative paths to try if the first one doesn't work
+  const possiblePaths = [
+    path.join(process.cwd(), '../client/build'),
+    path.join(process.cwd(), 'client/build'),
+    path.join(process.cwd(), '../../client/build'),
+    '/opt/render/project/src/client/build'
+  ];
+  
+  // Find the first path that exists
+  for (const testPath of possiblePaths) {
+    console.log(`Checking if build path exists: ${testPath}`);
+    if (fs.existsSync(testPath)) {
+      buildPath = testPath;
+      console.log(`✅ Found valid build path: ${buildPath}`);
+      break;
+    } else {
+      console.log(`❌ Build path does not exist: ${testPath}`);
+    }
+  }
+} else {
+  // Local development
+  buildPath = path.join(__dirname, '../client/build');
+}
+
+console.log(`Using build path: ${buildPath}`);
 
 // Check if build directory exists
 try {
