@@ -2,7 +2,11 @@ services:
   - type: web
     name: awesometodoapp
     env: node
-    buildCommand: cd server && npm install
+    buildCommand: >
+      cd client && npm install && npm run build &&
+      mkdir -p ../server/public &&
+      cp -r build/* ../server/public/ &&
+      cd ../server && npm install
     startCommand: cd server && NODE_ENV=production node index.js
     envVars:
       - key: NODE_ENV
