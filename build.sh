@@ -20,6 +20,11 @@ npm install
 echo "Building client..."
 npm run build
 
+# Create the directory structure that Render is looking for
+echo "Creating directory structure for Render..."
+mkdir -p /opt/render/project/src/client
+cp -r build /opt/render/project/src/client/
+
 # Go back to root
 cd ..
 
